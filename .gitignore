@@ -4,7 +4,8 @@
 [Bb]uild/
 [Bb]uilds/
 Assets/AssetStoreTools*
-Assets/ML-Agents/Plugins/
+
+Reinforcement learning with virtual simulation/Assets/ML-Agents/Plugins/
 
 # Visual Studio cache directory
 .vs/
