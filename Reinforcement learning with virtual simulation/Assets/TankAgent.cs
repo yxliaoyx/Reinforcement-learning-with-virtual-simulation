@@ -98,3 +98,7 @@ namespace Complete
         }
     }
 }
+
+//mlagents-learn config/trainer_config.yaml --run-id=tankRun --train
+//tensorboard --logdir=summaries
+//Decision Frequency = 5
