@@ -6,6 +6,7 @@
 Assets/AssetStoreTools*
 
 Reinforcement learning with virtual simulation/Assets/ML-Agents/Plugins/
+*log
 
 # Visual Studio cache directory
 .vs/

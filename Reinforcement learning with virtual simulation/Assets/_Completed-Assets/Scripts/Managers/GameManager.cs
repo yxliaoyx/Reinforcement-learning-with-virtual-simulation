@@ -14,8 +14,8 @@ namespace Complete
         public Text m_MessageText;                  // Reference to the overlay Text to display winning text, etc.
         public GameObject m_TankPrefab;             // Reference to the prefab the players will control.
         public TankManager[] m_Tanks;               // A collection of managers for enabling and disabling different aspects of the tanks.
+        public MLAgents.Brain brain;
 
-        
         private int m_RoundNumber;                  // Which round the game is currently on.
         private WaitForSeconds m_StartWait;         // Used to have a delay whilst the round starts.
         private WaitForSeconds m_EndWait;           // Used to have a delay whilst the round or game ends.
@@ -47,6 +47,8 @@ namespace Complete
                     Instantiate(m_TankPrefab, m_Tanks[i].m_SpawnPoint.position, m_Tanks[i].m_SpawnPoint.rotation) as GameObject;
                 m_Tanks[i].m_PlayerNumber = i + 1;
                 m_Tanks[i].Setup();
+                m_Tanks[i].m_Instance.GetComponent<TankAgent>().brain = brain;
+                m_Tanks[i].m_Instance.tag = "tank";
             }
         }
 
@@ -132,6 +134,11 @@ namespace Complete
 
         private IEnumerator RoundEnding ()
         {
+            for (int i = 0; i < m_Tanks.Length; i++)
+            {
+                m_Tanks[i].m_Instance.GetComponent<TankAgent>().Done();
+            }
+
             // Stop tanks from moving.
             DisableTankControl ();
 
@@ -143,7 +150,11 @@ namespace Complete
 
             // If there is a winner, increment their score.
             if (m_RoundWinner != null)
+            {
                 m_RoundWinner.m_Wins++;
+                m_RoundWinner.m_Instance.GetComponent<TankAgent>().AddReward(1);
+            }
+                
 
             // Now the winner's score has been incremented, see if someone has one the game.
             m_GameWinner = GetGameWinner ();
