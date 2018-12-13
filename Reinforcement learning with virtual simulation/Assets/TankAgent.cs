@@ -39,13 +39,16 @@ namespace Complete
             AddVectorObs(0);
             if (useVectorObs)
             {
-                float rayDistance = 50f;
+                float rayDistance = 80f;
                 float[] rayAngles = { 20f, 90f, 160f, 45f, 135f, 70f, 110f };
                 string[] detectableObjects = { "tank", "boundarie", "ground", "obstacle" };
-                AddVectorObs(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 0f, 0f));
-                Vector3 localVelocity = transform.InverseTransformDirection(agentRb.velocity);
-                AddVectorObs(localVelocity.x);
-                AddVectorObs(localVelocity.z);
+                AddVectorObs(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 1f, 1f));
+                AddVectorObs(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 1f, -10f));
+                //Vector3 localVelocity = transform.InverseTransformDirection(agentRb.velocity);
+                //AddVectorObs(localVelocity.x);
+                //AddVectorObs(localVelocity.z);
+                AddVectorObs(transform.position.x);
+                AddVectorObs(transform.position.z);
             }
         }
 
@@ -99,6 +102,7 @@ namespace Complete
     }
 }
 
+//activate ml-agents
 //mlagents-learn config/trainer_config.yaml --run-id=tankRun --train
 //tensorboard --logdir=summaries
 //Decision Frequency = 5
