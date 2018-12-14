@@ -100,8 +100,8 @@ namespace Complete
             //a += (long)_reward;
             //b++;
             //print("Avg: " + a/b);
-            GetComponent<TankAgent>().AddReward(_reward);
-            GetComponent<TankAgent>().Done();
+            //GetComponent<TankAgent>().AddReward(_reward);
+            //GetComponent<TankAgent>().Done();
             //GetComponent<TankAgent>().AgentOnDone(); 
             // Create an instance of the shell and store a reference to it's rigidbody.
             Rigidbody shellInstance =

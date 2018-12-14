@@ -10,6 +10,7 @@ namespace Complete
         TankMovement tankMovement;
         TankShooting tankShooting;
         public Vector2 relativePos;
+        public float Angle;
         public GameObject opponent;
 
         //public GameObject myAcademyObj;
@@ -59,16 +60,17 @@ namespace Complete
             }
         }
 
-        private void FixedUpdate()
-        {
-            //AddReward(-0.01f);
-        }
 
         public override void AgentReset()
         {
-            base.AgentReset();
+            base.AgentReset();           
+            GetComponent<TankMovement>().TankRigidbody.rotation = Quaternion.Euler(0f, Random.Range(0.0f, 360.0f), 0f);
+            Vector3 _enemyPos = GetComponent<TankAgent>().opponent.transform.position - transform.position;
+            var _angle = Vector3.Angle(transform.forward, _enemyPos);
+            _previousAngle = _angle;
         }
 
+        float _previousAngle = 0;
         public override void AgentAction(float[] vectorAction, string textAction)
         {
             //tankMovement.m_MovementInputValue = vectorAction[0];
@@ -115,12 +117,46 @@ namespace Complete
                     tankShooting.m_GetFireButton = true;
                     break;
             }
+            Vector3 _enemyPos = GetComponent<TankAgent>().opponent.transform.position - transform.position;
+            var _angle = Vector3.Angle(transform.forward, _enemyPos);
+
+            if(_angle < 15)
+            {
+                AddReward(2.0f);
+            }
+            else
+            {
+                if (_angle < _previousAngle)
+                {
+                    AddReward(0.2f);
+                }
+                else
+                {
+                    AddReward(-0.2f);
+                }
+            }
+            
+
+            if(_angle < 15)
+            {
+                //AddReward(16f);
+               // Done();
+                //AgentOnDone();
+            }
+            
+            //if(_timePassed > 30)
+            //{
+            //    AgentReset();
+            //}
+
+            _previousAngle = _angle;
+            Angle = _angle;
         }
+
 
         public override void AgentOnDone()
         {
-            Debug.Log("Random rotation set");
-            GetComponent<TankMovement>().TankRigidbody.rotation = Quaternion.Euler(0f, Random.Range(0.0f,360.0f), 0f);
+          //  Debug.Log("Random rotation set");
         }
     }
 }
