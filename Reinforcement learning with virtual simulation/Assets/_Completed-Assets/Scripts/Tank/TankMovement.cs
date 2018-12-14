@@ -16,6 +16,7 @@ namespace Complete
 
         private string m_MovementAxisName;          // The name of the input axis for moving forward and back.
         private string m_TurnAxisName;              // The name of the input axis for turning.
+        public Rigidbody TankRigidbody { get { return m_Rigidbody; } }
         private Rigidbody m_Rigidbody;              // Reference used to move the tank.
         private float m_OriginalPitch;              // The pitch of the audio source at the start of the scene.
         private ParticleSystem[] m_particleSystems; // References to all the particles systems used by the Tanks

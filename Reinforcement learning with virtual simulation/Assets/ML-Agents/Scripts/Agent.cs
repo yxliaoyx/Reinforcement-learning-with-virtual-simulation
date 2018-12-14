@@ -200,7 +200,7 @@ namespace MLAgents
         /// programmatically through <see cref="GiveBrain"/>. It is OK for an agent
         /// to not have a brain, as long as no decision is requested.
         /// </summary>
-        [HideInInspector] public Brain brain;
+        public Brain brain;
 
         /// <summary>
         /// Agent parameters specified within the Editor via AgentEditor.

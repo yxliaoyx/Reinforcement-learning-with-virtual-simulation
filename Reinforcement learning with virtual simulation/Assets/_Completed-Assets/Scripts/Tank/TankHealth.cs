@@ -49,7 +49,7 @@ namespace Complete
         {
             // Reduce current health by the amount of damage done.
             m_CurrentHealth -= amount;
-            tankAgent.AddReward(-0.5f);
+            //tankAgent.AddReward(-0.5f);
 
             // Change the UI elements appropriately.
             SetHealthUI ();
@@ -90,7 +90,7 @@ namespace Complete
             // Turn the tank off.
             gameObject.SetActive (false);
 
-            tankAgent.AddReward(-1);
+            //tankAgent.AddReward(-1);
         }
     }
 }

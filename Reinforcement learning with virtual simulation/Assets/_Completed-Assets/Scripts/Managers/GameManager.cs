@@ -18,7 +18,8 @@ namespace Complete
         public Text m_MessageText;                  // Reference to the overlay Text to display winning text, etc.
         public GameObject m_TankPrefab;             // Reference to the prefab the players will control.
         public TankManager[] m_Tanks;               // A collection of managers for enabling and disabling different aspects of the tanks.
-        public MLAgents.Brain brain;
+        public MLAgents.Brain brain0;
+        public MLAgents.Brain brain1;
 
         private int m_RoundNumber;                  // Which round the game is currently on.
         private WaitForSeconds m_StartWait;         // Used to have a delay whilst the round starts.
@@ -51,9 +52,15 @@ namespace Complete
                     Instantiate(m_TankPrefab, m_Tanks[i].m_SpawnPoint.position, m_Tanks[i].m_SpawnPoint.rotation) as GameObject;
                 m_Tanks[i].m_PlayerNumber = i + 1;
                 m_Tanks[i].Setup();
-                m_Tanks[i].m_Instance.GetComponent<TankAgent>().brain = brain;
+                
                 m_Tanks[i].m_Instance.tag = "tank";
             }
+
+            m_Tanks[0].m_Instance.GetComponent<TankAgent>().brain = brain0;
+            m_Tanks[1].m_Instance.GetComponent<TankAgent>().brain = brain1;
+
+            m_Tanks[0].m_Instance.GetComponent<TankAgent>().opponent = m_Tanks[1].m_Instance;
+            m_Tanks[1].m_Instance.GetComponent<TankAgent>().opponent = m_Tanks[0].m_Instance;
         }
 
 
@@ -156,7 +163,7 @@ namespace Complete
             if (m_RoundWinner != null)
             {
                 m_RoundWinner.m_Wins++;
-                m_RoundWinner.m_Instance.GetComponent<TankAgent>().AddReward(10);
+                //m_RoundWinner.m_Instance.GetComponent<TankAgent>().AddReward(10);
             }
                 
 
