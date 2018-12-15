@@ -132,17 +132,17 @@ namespace Complete
             //Angle reward
             if (_angle < 15)
             {
-                AddReward(3.5f);
+                AddReward(5.0f);
             }
             else
             {
                 if (_angle < _previousAngle)
                 {
-                    AddReward(0.35f);
+                    AddReward(0.5f);
                 }
                 else
                 {
-                    AddReward(-0.35f);
+                    AddReward(-0.5f);
                 }
             }
 
@@ -157,11 +157,11 @@ namespace Complete
                 {
                     if(_distance < _previousDistance)
                     {
-                        AddReward(0.5f);
+                        AddReward(0.3f);
                     }
                     else
                     {
-                        AddReward(-0.5f);
+                        AddReward(-0.3f);
                     }
                 }
                 if(_distance > rewardMinDistance)
