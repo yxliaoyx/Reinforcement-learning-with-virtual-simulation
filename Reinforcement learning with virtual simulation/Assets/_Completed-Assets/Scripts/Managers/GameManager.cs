@@ -7,18 +7,19 @@ namespace Complete
 {
     public class GameManager : MonoBehaviour
     {
-        int m_NumRoundsToWin = int.MaxValue;
+        //int m_NumRoundsToWin = int.MaxValue;
         //float m_StartDelay = 0f;
         //float m_EndDelay = 0f;
 
-        //public int m_NumRoundsToWin = 5;            // The number of rounds a single player has to win to win the game.
+        public int m_NumRoundsToWin = 5;            // The number of rounds a single player has to win to win the game.
         public float m_StartDelay = 3f;             // The delay between the start of RoundStarting and RoundPlaying phases.
         public float m_EndDelay = 3f;               // The delay between the end of RoundPlaying and RoundEnding phases.
         public CameraControl m_CameraControl;       // Reference to the CameraControl script for control during different phases.
         public Text m_MessageText;                  // Reference to the overlay Text to display winning text, etc.
         public GameObject m_TankPrefab;             // Reference to the prefab the players will control.
         public TankManager[] m_Tanks;               // A collection of managers for enabling and disabling different aspects of the tanks.
-        public MLAgents.Brain brain;
+        public MLAgents.Brain brain0;
+        public MLAgents.Brain brain1;
 
         private int m_RoundNumber;                  // Which round the game is currently on.
         private WaitForSeconds m_StartWait;         // Used to have a delay whilst the round starts.
@@ -51,9 +52,15 @@ namespace Complete
                     Instantiate(m_TankPrefab, m_Tanks[i].m_SpawnPoint.position, m_Tanks[i].m_SpawnPoint.rotation) as GameObject;
                 m_Tanks[i].m_PlayerNumber = i + 1;
                 m_Tanks[i].Setup();
-                m_Tanks[i].m_Instance.GetComponent<TankAgent>().brain = brain;
+
                 m_Tanks[i].m_Instance.tag = "tank";
             }
+
+            m_Tanks[0].m_Instance.GetComponent<TankAgent>().brain = brain0;
+            m_Tanks[1].m_Instance.GetComponent<TankAgent>().brain = brain1;
+
+            m_Tanks[0].m_Instance.GetComponent<TankAgent>().opponent = m_Tanks[1].m_Instance;
+            m_Tanks[1].m_Instance.GetComponent<TankAgent>().opponent = m_Tanks[0].m_Instance;
         }
 
 
@@ -138,10 +145,10 @@ namespace Complete
 
         private IEnumerator RoundEnding ()
         {
-            for (int i = 0; i < m_Tanks.Length; i++)
-            {
-                m_Tanks[i].m_Instance.GetComponent<TankAgent>().Done();
-            }
+            //for (int i = 0; i < m_Tanks.Length; i++)
+            //{
+            //    m_Tanks[i].m_Instance.GetComponent<TankAgent>().Done();
+            //}
 
             // Stop tanks from moving.
             DisableTankControl ();
@@ -156,7 +163,7 @@ namespace Complete
             if (m_RoundWinner != null)
             {
                 m_RoundWinner.m_Wins++;
-                m_RoundWinner.m_Instance.GetComponent<TankAgent>().AddReward(10);
+                //m_RoundWinner.m_Instance.GetComponent<TankAgent>().AddReward(10);
             }
                 
 

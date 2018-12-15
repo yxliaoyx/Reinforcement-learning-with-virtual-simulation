@@ -10,6 +10,8 @@ namespace Complete
         TankMovement tankMovement;
         TankShooting tankShooting;
 
+        public GameObject opponent;
+
         //public GameObject myAcademyObj;
         //BananaAcademy myAcademy;
 
@@ -17,7 +19,7 @@ namespace Complete
         //BananaArea myArea;
 
         Rigidbody agentRb;
-        
+
         public bool contribute;
         private RayPerception rayPer;
         public bool useVectorObs;
@@ -47,8 +49,12 @@ namespace Complete
                 //Vector3 localVelocity = transform.InverseTransformDirection(agentRb.velocity);
                 //AddVectorObs(localVelocity.x);
                 //AddVectorObs(localVelocity.z);
-                AddVectorObs(transform.position.x);
-                AddVectorObs(transform.position.z);
+
+                AddVectorObs(Vector3.Distance(opponent.transform.position, transform.position));
+
+                Vector3 opponent_position = transform.InverseTransformPoint(opponent.transform.position);
+                AddVectorObs(opponent_position.x);
+                AddVectorObs(opponent_position.z);
             }
         }
 
@@ -99,10 +105,17 @@ namespace Complete
         {
 
         }
+
+        public override void AgentReset()
+        {
+            base.AgentReset();
+            //transform.position = new Vector3(Random.Range(-40f, 40f), 0, Random.Range(-40f, 40f));
+            //transform.rotation = Quaternion.Euler(0f, Random.Range(0.0f, 360.0f), 0f);
+        }
     }
 }
 
 //activate ml-agents
-//mlagents-learn config/trainer_config.yaml --run-id=tankRun --train
+//mlagents-learn config/tank_trainer_config.yaml --run-id=tankRun --train
 //tensorboard --logdir=summaries
 //Decision Frequency = 5
