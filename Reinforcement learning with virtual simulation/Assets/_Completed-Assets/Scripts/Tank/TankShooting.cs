@@ -122,7 +122,7 @@ namespace Complete
             float _predictedHitPosToTargetdistance = Vector3.Distance(PredictedDropPos, GetComponent<TankAgent>().opponent.transform.position);
             if (_predictedHitPosToTargetdistance < 5)
             {
-                float _reward = 300 + (5 - _predictedHitPosToTargetdistance) * 100;
+                float _reward = 3000 + (5 - _predictedHitPosToTargetdistance) * 1000;
                 Debug.Log("Hit reward added: " + _reward);               
                 GetComponent<TankAgent>().AddReward(_reward);
                 //GetComponent<TankAgent>().AddReward(200 + (5 - _predictedHitPosToTargetdistance) *60);
