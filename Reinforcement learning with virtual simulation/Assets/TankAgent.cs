@@ -53,7 +53,9 @@ namespace Complete
                 Vector3 opponent_position = transform.InverseTransformPoint(opponent.transform.position);
                 relativePos = new Vector2(opponent_position.x, opponent_position.z);
                 AddVectorObs(relativePos);
-                //AddVectorObs(tankShooting.CurrentLaunchForce);
+
+                AddVectorObs(Vector3.Distance(transform.position, opponent.transform.position));
+                AddVectorObs(tankShooting.CurrentLaunchForce);
 
                 //AddVectorObs(opponent_position.x);
                 //AddVectorObs(opponent_position.z);
@@ -63,7 +65,7 @@ namespace Complete
 
         public override void AgentReset()
         {
-            base.AgentReset();           
+            base.AgentReset();
             GetComponent<TankMovement>().TankRigidbody.rotation = Quaternion.Euler(0f, Random.Range(0.0f, 360.0f), 0f);
             Vector3 _enemyPos = GetComponent<TankAgent>().opponent.transform.position - transform.position;
             var _angle = Vector3.Angle(transform.forward, _enemyPos);
@@ -81,7 +83,7 @@ namespace Complete
             var Horizontal = (int)vectorAction[0];
             var FireButton = (int)vectorAction[1];
             //Time penalty
-           
+
             //switch (Vertical)
             //{
             //    case 0:
@@ -94,6 +96,7 @@ namespace Complete
             //        tankMovement.m_MovementInputValue = -1;
             //        break;
             //}
+            //tankMovement.m_MovementInputValue = 1;
 
             switch (Horizontal)
             {
@@ -120,7 +123,7 @@ namespace Complete
             Vector3 _enemyPos = GetComponent<TankAgent>().opponent.transform.position - transform.position;
             var _angle = Vector3.Angle(transform.forward, _enemyPos);
 
-            if(_angle < 15)
+            if (_angle < 15)
             {
                 AddReward(2.0f);
             }
@@ -135,15 +138,15 @@ namespace Complete
                     AddReward(-0.2f);
                 }
             }
-            
 
-            if(_angle < 15)
+
+            if (_angle < 15)
             {
                 //AddReward(16f);
-               // Done();
+                // Done();
                 //AgentOnDone();
             }
-            
+
             //if(_timePassed > 30)
             //{
             //    AgentReset();
@@ -156,7 +159,7 @@ namespace Complete
 
         public override void AgentOnDone()
         {
-          //  Debug.Log("Random rotation set");
+            //  Debug.Log("Random rotation set");
         }
     }
 }

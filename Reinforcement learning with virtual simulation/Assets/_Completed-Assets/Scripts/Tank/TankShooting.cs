@@ -58,7 +58,7 @@ namespace Complete
             //    Fire();
             //}
             // Otherwise, if the fire button has just started being pressed...
-             if (m_GetFireButton && !m_PreviousGetFireButton)
+            if (m_GetFireButton && !m_PreviousGetFireButton)
             {
                 // ... reset the fired flag and reset the launch force.
                 m_Fired = false;
@@ -72,7 +72,7 @@ namespace Complete
             else if (m_GetFireButton && !m_Fired)
             {
                 // Increment the launch force and update the slider.
-                if(m_CurrentLaunchForce < m_MaxLaunchForce)
+                if (m_CurrentLaunchForce < m_MaxLaunchForce)
                     m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
 
                 m_AimSlider.value = m_CurrentLaunchForce;
@@ -87,16 +87,24 @@ namespace Complete
             m_PreviousGetFireButton = m_GetFireButton;
         }
 
-        long  a = 0;
-        int b=0;
+        long a = 0;
+        int b = 0;
+
+        public Vector3 PredictedDropPos;
+        public float DistanceLost;
+        public void OnShellDropped(Vector3 dropPos)
+        {
+            DistanceLost = Vector3.Distance(PredictedDropPos, dropPos);
+        }
+
         private void Fire()
         {
             // Set the fired flag so only Fire is only called once.
             m_Fired = true;
-            Vector3 _enemyPos = GetComponent<TankAgent>().opponent.transform.position - transform.position;
-            var _angle = Vector3.Angle(transform.forward, _enemyPos);
-            var _reward = 180 - _angle;
-            print("Angle reward: " + _reward);
+            //Vector3 _enemyPos = GetComponent<TankAgent>().opponent.transform.position - transform.position;
+            //var _angle = Vector3.Angle(transform.forward, _enemyPos);
+            //var _reward = 180 - _angle;
+            //print("Angle reward: " + _reward);
             //a += (long)_reward;
             //b++;
             //print("Avg: " + a/b);
@@ -106,11 +114,18 @@ namespace Complete
             // Create an instance of the shell and store a reference to it's rigidbody.
             Rigidbody shellInstance =
                 Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
-
+            //m_CurrentLaunchForce = 15.0f;
             // Set the shell's velocity to the launch force in the fire position's forward direction.
             shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
+            PredictedDropPos = transform.position + transform.forward.normalized * m_CurrentLaunchForce;
 
-            shellInstance.GetComponent<ShellExplosion>().owner  = gameObject;
+            float _predictedHitPosToTargetdistance = Vector3.Distance(PredictedDropPos, GetComponent<TankAgent>().opponent.transform.position);
+            if (_predictedHitPosToTargetdistance < 5)
+            {
+                GetComponent<TankAgent>().AddReward(20 + (5 - _predictedHitPosToTargetdistance) * 10);
+            }
+
+            shellInstance.GetComponent<ShellExplosion>().owner = gameObject;
             shellInstance.GetComponent<ShellExplosion>().target = GetComponent<TankAgent>().opponent;
 
             // Change the clip to the firing clip and play it.
