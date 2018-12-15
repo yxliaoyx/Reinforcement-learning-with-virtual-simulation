@@ -25,6 +25,10 @@ namespace Complete
         private RayPerception rayPer;
         public bool useVectorObs;
 
+        [Header("Distance reward range")]
+        [SerializeField]
+        float rewardMinDistance = 15, rewardMaxDistance = 30;
+
         public override void InitializeAgent()
         {
             tankMovement = GetComponent<TankMovement>();
@@ -67,36 +71,38 @@ namespace Complete
         {
             base.AgentReset();
             GetComponent<TankMovement>().TankRigidbody.rotation = Quaternion.Euler(0f, Random.Range(0.0f, 360.0f), 0f);
+            GetComponent<TankMovement>().TankRigidbody.position = new Vector3(Random.Range(40, -40), 0, Random.Range(40, -40));
+
             Vector3 _enemyPos = GetComponent<TankAgent>().opponent.transform.position - transform.position;
             var _angle = Vector3.Angle(transform.forward, _enemyPos);
             _previousAngle = _angle;
         }
 
         float _previousAngle = 0;
+        float _previousDistance = 0;
         public override void AgentAction(float[] vectorAction, string textAction)
         {
             //tankMovement.m_MovementInputValue = vectorAction[0];
             //tankMovement.m_TurnInputValue = vectorAction[0];
             //tankShooting.m_GetFireButton = (vectorAction[1] > 0);
 
-            //var Vertical = (int)vectorAction[0];
             var Horizontal = (int)vectorAction[0];
             var FireButton = (int)vectorAction[1];
-            //Time penalty
+            var Vertical = (int)vectorAction[2];
 
-            //switch (Vertical)
-            //{
-            //    case 0:
-            //        tankMovement.m_MovementInputValue = 0;
-            //        break;
-            //    case 1:
-            //        tankMovement.m_MovementInputValue = 1;
-            //        break;
-            //    case 2:
-            //        tankMovement.m_MovementInputValue = -1;
-            //        break;
-            //}
-            //tankMovement.m_MovementInputValue = 1;
+            switch (Vertical)
+            {
+                case 0:
+                    tankMovement.m_MovementInputValue = 0;
+                    break;
+                case 1:
+                    tankMovement.m_MovementInputValue = 1;
+                    break;
+                case 2:
+                    tankMovement.m_MovementInputValue = -1;
+                    break;
+            }
+
 
             switch (Horizontal)
             {
@@ -123,29 +129,54 @@ namespace Complete
             Vector3 _enemyPos = GetComponent<TankAgent>().opponent.transform.position - transform.position;
             var _angle = Vector3.Angle(transform.forward, _enemyPos);
 
+            //Angle reward
             if (_angle < 15)
             {
-                AddReward(2.0f);
+                AddReward(3.5f);
             }
             else
             {
                 if (_angle < _previousAngle)
                 {
-                    AddReward(0.2f);
+                    AddReward(0.35f);
                 }
                 else
                 {
-                    AddReward(-0.2f);
+                    AddReward(-0.35f);
                 }
             }
 
-
-            if (_angle < 15)
+            var _distance = Vector3.Distance(opponent.transform.position, transform.position);
+            if (_distance > rewardMinDistance && _distance < rewardMaxDistance)
             {
-                //AddReward(16f);
-                // Done();
-                //AgentOnDone();
+                AddReward(3.0f);
             }
+            else
+            {
+                if(_distance > rewardMaxDistance)
+                {
+                    if(_distance < _previousDistance)
+                    {
+                        AddReward(0.5f);
+                    }
+                    else
+                    {
+                        AddReward(-0.5f);
+                    }
+                }
+                if(_distance > rewardMinDistance)
+                {
+                    if (_distance > _previousDistance)
+                    {
+                        AddReward(0.2f);
+                    }
+                    else
+                    {
+                        AddReward(-0.2f);
+                    }
+                }                
+            }
+            
 
             //if(_timePassed > 30)
             //{
@@ -153,6 +184,7 @@ namespace Complete
             //}
 
             _previousAngle = _angle;
+            _previousDistance = _distance;
             Angle = _angle;
         }
 
