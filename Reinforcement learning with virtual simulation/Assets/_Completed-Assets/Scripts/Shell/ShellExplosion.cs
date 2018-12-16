@@ -15,9 +15,12 @@ namespace Complete
         public float m_MaxLifeTime = 2f;                    // The time in seconds before the shell is removed.
         public float m_ExplosionRadius = 5f;                // The maximum distance away from the explosion tanks can be and are still affected.
 
+        TankAgent ownerTankAgent;
 
         private void Start()
         {
+            ownerTankAgent = owner.GetComponent<TankAgent>();
+
             // If it isn't destroyed by then, destroy the shell after it's lifetime.
             Destroy(gameObject, m_MaxLifeTime);
         }
@@ -25,7 +28,8 @@ namespace Complete
 
         private void OnTriggerEnter(Collider other)
         {
-            owner.GetComponent<TankAgent>().AddReward(30 - Vector3.Distance(target.transform.position, transform.position));
+            //float accuracy = Vector3.Distance(target.transform.position, owner.transform.position) - Vector3.Distance(target.transform.position, transform.position);
+            ownerTankAgent.AddReward(30 - Vector3.Distance(target.transform.position, transform.position));
 
             // Collect all the colliders in a sphere from the shell's current position to a radius of the explosion radius.
             Collider[] colliders = Physics.OverlapSphere(transform.position, m_ExplosionRadius, m_TankMask);
@@ -55,6 +59,9 @@ namespace Complete
 
                 // Deal this damage to the tank.
                 targetHealth.TakeDamage(damage);
+
+                ownerTankAgent.AddReward(damage);
+                Debug.Log("HIT");
             }
 
             // Unparent the particles from the shell.

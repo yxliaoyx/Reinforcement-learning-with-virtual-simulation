@@ -41,20 +41,22 @@ namespace Complete
             AddVectorObs(0);
             if (useVectorObs)
             {
-                float rayDistance = 80f;
-                float[] rayAngles = { 20f, 90f, 160f, 45f, 135f, 70f, 110f };
+                float rayDistance = 10f;
+                float[] rayAngles = {90f};
                 string[] detectableObjects = { "tank", "boundarie", "ground", "obstacle" };
+                Debug.Log(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 1f, 1f));
                 AddVectorObs(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 1f, 1f));
-                AddVectorObs(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 1f, -10f));
+                //AddVectorObs(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 1f, -10f));
                 //Vector3 localVelocity = transform.InverseTransformDirection(agentRb.velocity);
                 //AddVectorObs(localVelocity.x);
                 //AddVectorObs(localVelocity.z);
-
                 AddVectorObs(Vector3.Distance(opponent.transform.position, transform.position));
 
                 Vector3 opponent_position = transform.InverseTransformPoint(opponent.transform.position);
                 AddVectorObs(opponent_position.x);
                 AddVectorObs(opponent_position.z);
+
+                AddVectorObs(tankShooting.m_CurrentLaunchForce);
             }
         }
 
@@ -109,8 +111,8 @@ namespace Complete
         public override void AgentReset()
         {
             base.AgentReset();
-            //transform.position = new Vector3(Random.Range(-40f, 40f), 0, Random.Range(-40f, 40f));
-            //transform.rotation = Quaternion.Euler(0f, Random.Range(0.0f, 360.0f), 0f);
+            transform.position = new Vector3(Random.Range(-40f, 40f), 0, Random.Range(-40f, 40f));
+            transform.rotation = Quaternion.Euler(0f, Random.Range(0.0f, 360.0f), 0f);
         }
     }
 }

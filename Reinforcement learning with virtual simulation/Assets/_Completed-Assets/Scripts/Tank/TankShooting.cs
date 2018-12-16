@@ -17,9 +17,12 @@ namespace Complete
         public float m_MaxChargeTime = 0.75f;       // How long the shell can charge for before it is fired at max force.
         public bool m_GetFireButton = false;
         public bool m_PreviousGetFireButton = false;
+        public float m_CurrentLaunchForce;         // The force that will be given to the shell when the fire button is released.
+
+        TankAgent tankAgent;
 
         private string m_FireButton;                // The input axis that is used for launching shells.
-        private float m_CurrentLaunchForce;         // The force that will be given to the shell when the fire button is released.
+        //private float m_CurrentLaunchForce;         // The force that will be given to the shell when the fire button is released.
         private float m_ChargeSpeed;                // How fast the launch force increases, based on the max charge time.
         private bool m_Fired;                       // Whether or not the shell has been launched with this button press.
 
@@ -34,6 +37,8 @@ namespace Complete
 
         private void Start()
         {
+            tankAgent = GetComponent<TankAgent>();
+
             // The fire axis is based on the player number.
             m_FireButton = "Fire" + m_PlayerNumber;
 
@@ -87,6 +92,9 @@ namespace Complete
 
         private void Fire()
         {
+            Vector3 opponent_position = transform.InverseTransformPoint(tankAgent.opponent.transform.position);
+            tankAgent.AddReward(-Mathf.Abs(opponent_position.x));
+
             // Set the fired flag so only Fire is only called once.
             m_Fired = true;
 
@@ -94,8 +102,10 @@ namespace Complete
             Rigidbody shellInstance =
                 Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
 
-            shellInstance.GetComponent<ShellExplosion>().owner = gameObject;
-            shellInstance.GetComponent<ShellExplosion>().target = GetComponent<TankAgent>().opponent;
+            ShellExplosion shellExplosion = shellInstance.GetComponent<ShellExplosion>();
+
+            shellExplosion.owner = gameObject;
+            shellExplosion.target = tankAgent.opponent;
 
             // Set the shell's velocity to the launch force in the fire position's forward direction.
             shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
