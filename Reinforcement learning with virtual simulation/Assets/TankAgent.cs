@@ -44,7 +44,6 @@ namespace Complete
                 float rayDistance = 10f;
                 float[] rayAngles = {90f};
                 string[] detectableObjects = { "tank", "boundarie", "ground", "obstacle" };
-                Debug.Log(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 1f, 1f));
                 AddVectorObs(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 1f, 1f));
                 //AddVectorObs(rayPer.Perceive(rayDistance, rayAngles, detectableObjects, 1f, -10f));
                 //Vector3 localVelocity = transform.InverseTransformDirection(agentRb.velocity);
@@ -111,7 +110,7 @@ namespace Complete
         public override void AgentReset()
         {
             base.AgentReset();
-            transform.position = new Vector3(Random.Range(-40f, 40f), 0, Random.Range(-40f, 40f));
+            transform.position = new Vector3(Random.Range(-30f, 30f), 0, Random.Range(-30f, 30f));
             transform.rotation = Quaternion.Euler(0f, Random.Range(0.0f, 360.0f), 0f);
         }
     }

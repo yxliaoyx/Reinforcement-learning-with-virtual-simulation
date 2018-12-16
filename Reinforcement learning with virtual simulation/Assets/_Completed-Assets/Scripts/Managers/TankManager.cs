@@ -75,7 +75,7 @@ namespace Complete
         {
             //m_Instance.transform.position = m_SpawnPoint.position;
             //m_Instance.transform.rotation = m_SpawnPoint.rotation;
-            m_Instance.transform.position = new Vector3(UnityEngine.Random.Range(-40f, 40f), 0, UnityEngine.Random.Range(-40f, 40f));
+            m_Instance.transform.position = new Vector3(UnityEngine.Random.Range(-30f, 30f), 0, UnityEngine.Random.Range(-30f, 30f));
             m_Instance.transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0.0f, 360.0f), 0f);
 
             m_Instance.SetActive (false);
